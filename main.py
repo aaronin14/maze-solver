@@ -1,6 +1,7 @@
 from graphics import Window
 from maze import Maze
 
+
 def main():
 
     screen_width = 800
