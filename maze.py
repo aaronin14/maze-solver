@@ -26,11 +26,13 @@ class Maze:
         self._break_entrance_and_exit()
 
     def _create_cells(self):
+        # Create cells matrix
         for i in range(self._num_cols):
             col_cells = []
             for j in range(self._num_rows):
                 col_cells.append(Cell(self._win))
             self._cells.append(col_cells)
+        # Draw cells
         for i in range(self._num_cols):
             for j in range(self._num_rows):
                     self._draw_cell(i, j)
@@ -49,7 +51,7 @@ class Maze:
         if self._win is None:
             return
         self._win.redraw()
-        time.sleep(0.0)
+        time.sleep(0.01)
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False

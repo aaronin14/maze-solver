@@ -1,2 +1,3 @@
 # maze-solver
-A Maze Solver written in Python
+
+Using Python and Tkinter to build a Graphical User Interface that solves mazes.

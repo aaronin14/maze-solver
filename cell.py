@@ -55,8 +55,12 @@ class Cell:
     def draw_move(self, to_cell, undo=False):
         if not self.drawable() or not to_cell.drawable():
             return
+
+        # Find center points
         p1 = Point((self._x1 + self._x2)/2, (self._y1+self._y2)/2)
         p2 = Point((to_cell._x1+to_cell._x2)/2, (to_cell._y1+to_cell._y2)/2)
+
+        # Draw Line
         line = Line(p1, p2)
         fill_color = "red"
         if undo:
