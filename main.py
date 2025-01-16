@@ -13,7 +13,8 @@ def main():
     cell_size_y = (screen_height - margin * 2) / num_rows
 
     win = Window(screen_width, screen_height)
-    maze = Maze(margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, win, 1)
+    maze = Maze(margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, win)
+    maze.solve()
 
 
     win.wait_for_close()

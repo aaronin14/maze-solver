@@ -123,3 +123,41 @@ class Maze:
         for col in self._cells:
             for cell in col:
                 cell.visited = False
+
+    def solve(self):
+        return self._solve_r(0, 0)
+
+    # Depth-first Search
+    def _solve_r(self, i, j):
+        if i == self._num_cols-1 and j == self._num_rows-1:
+            return True
+        self._animate()
+        self._cells[i][j].visited = True
+
+        # Check directions
+        # left
+        if not self._cells[i][j].has_left_wall and not self._cells[i-1][j].visited:
+            self._cells[i][j].draw_move(self._cells[i-1][j])
+            if self._solve_r(i-1, j):
+                return True
+            self._cells[i][j].draw_move(self._cells[i-1][j], undo=True)
+        # right
+        if not self._cells[i][j].has_right_wall and not self._cells[i+1][j].visited:
+            self._cells[i][j].draw_move(self._cells[i+1][j])
+            if self._solve_r(i+1, j):
+                return True
+            self._cells[i][j].draw_move(self._cells[i+1][j], undo=True)
+        # top
+        if not self._cells[i][j].has_top_wall and not self._cells[i][j-1].visited:
+            self._cells[i][j].draw_move(self._cells[i][j-1])
+            if self._solve_r(i, j-1):
+                return True
+            self._cells[i][j].draw_move(self._cells[i][j-1], undo=True)
+        # bottom
+        if not self._cells[i][j].has_bottom_wall and not self._cells[i][j+1].visited:
+            self._cells[i][j].draw_move(self._cells[i][j+1])
+            if self._solve_r(i, j+1):
+                return True
+            self._cells[i][j].draw_move(self._cells[i][j+1], undo=True)
+        return False
+
