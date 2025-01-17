@@ -4,8 +4,8 @@ from maze import Maze
 
 def main():
 
-    screen_width = 600
-    screen_height = 600
+    screen_width = 900
+    screen_height = 900
     num_rows = 18
     num_cols = 18
     margin = 30
