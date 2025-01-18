@@ -1,38 +1,73 @@
 import tkinter as tk
 
-class Settings:
+class UserInterface:
     def __init__(self, frame, maze):
         self.__frame = frame
         self.__maze = maze
+        self.__default_num_rows = tk.StringVar(value="15")
+        self.__default_num_cols = tk.StringVar(value="15")
+        self.__default_gen_spd = tk.StringVar(value="10")
+        self.__default_solve_spd = tk.StringVar(value="10")
+        self.__algorithm_option = tk.StringVar(value="DFS")
+
         # Maze Settings
-        self.__frame1 = tk.Frame(self.__frame)
-        self.__frame1.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
-        self.__frame1.columnconfigure(0, weight=1)
+        self.__groupbox_maze_settings = tk.LabelFrame(self.__frame, text="Maze Settings", padx=5, pady=5)
+        self.__groupbox_maze_settings.grid(row=0, column=0, padx=15, pady=10, sticky="ew")
+        self.__groupbox_maze_settings.columnconfigure(0, weight=1)
         # Num Rows
-        self.__lbl_num_rows = tk.Label(self.__frame1, text="Num Rows (max=30):")
+        self.__lbl_num_rows = tk.Label(self.__groupbox_maze_settings, text="Num Rows (5-30):")
         self.__lbl_num_rows.grid(row=0, column=0, sticky="w")
-        self.__entry_num_rows = tk.Entry(self.__frame1, width=10)
-        self.__entry_num_rows.grid(row=0, column=1)
+        self.__sb_num_rows = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_rows, increment=1, width=10, command=self.on_value_change)
+        self.__sb_num_rows.grid(row=0, column=1)
         # Num Cols
-        self.__lbl_num_cols = tk.Label(self.__frame1, text="Num Cols (max=30):")
+        self.__lbl_num_cols = tk.Label(self.__groupbox_maze_settings, text="Num Cols (5-30):")
         self.__lbl_num_cols.grid(row=1, column=0, sticky="w")
-        self.__entry_num_cols = tk.Entry(self.__frame1, width=10)
-        self.__entry_num_cols.grid(row=1, column=1)
+        self.__sb_num_cols = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_cols, increment=1, width=10, command=self.on_value_change)
+        self.__sb_num_cols.grid(row=1, column=1)
+
         # Generate Button
-        self.__btn_generate = tk.Button(self.__frame1, text="Generate", command=self.__maze.generate_maze)
-        self.__btn_generate.grid(row=2, column=0, columnspan=2, sticky="ew")
+        self.__btn_generate = tk.Button(self.__frame, text="Generate", command=self.__maze.generate_maze)
+        self.__btn_generate.grid(row=1, column=0, padx=15, sticky="ew")
 
         # Algorithm Options
-        self.__frame2 = tk.Frame(self.__frame)
-        self.__frame2.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
-        self.__frame2.columnconfigure(0, weight=1)
+        self.__groupbox_algorithms = tk.LabelFrame(self.__frame, text="Algorithm Options", padx=5, pady=5)
+        self.__groupbox_algorithms.grid(row=2, column=0, padx=15, pady=10, sticky="nsew")
         # Radiobuttons
-        self.algorithm_option = tk.StringVar(value="DFS")
-        self.__rb1 = tk.Radiobutton(self.__frame2, text="Depth-First Search", variable=self.algorithm_option, value="DFS")
-        self.__rb2 = tk.Radiobutton(self.__frame2, text="Breadth-First Search", variable=self.algorithm_option, value="BFS")
-        self.__rb3 = tk.Radiobutton(self.__frame2, text="A* Search", variable=self.algorithm_option, value="A*")
-        self.__btn_solve = tk.Button(self.__frame2, text="Solve", command=self.__maze.solve)
-        self.__rb1.grid(row=4, column=0, sticky="w")
-        self.__rb2.grid(row=5, column=0, sticky="w")
-        self.__rb3.grid(row=6, column=0, sticky="w")
-        self.__btn_solve.grid(row=7, column=0, columnspan=2, sticky="ew")
+        self.__rb1 = tk.Radiobutton(self.__groupbox_algorithms, text="Depth-First Search", variable=self.__algorithm_option, value="DFS")
+        self.__rb2 = tk.Radiobutton(self.__groupbox_algorithms, text="Breadth-First Search", variable=self.__algorithm_option, value="BFS")
+        self.__rb3 = tk.Radiobutton(self.__groupbox_algorithms, text="A* Search", variable=self.__algorithm_option, value="A*")
+        self.__rb1.grid(row=1, column=0, sticky="w")
+        self.__rb2.grid(row=2, column=0, sticky="w")
+        self.__rb3.grid(row=3, column=0, sticky="w")
+
+        # Solve Button
+        self.__btn_solve = tk.Button(self.__frame, text="Solve", command=self.__maze.solve)
+        self.__btn_solve.grid(row=3, column=0, padx=15, sticky="ew")
+
+        # Animation Options
+        self.__groupbox_animations = tk.LabelFrame(self.__frame, text="Animation Options", padx=5, pady=5)
+        self.__groupbox_animations.grid(row=4, column=0, padx=15, pady=10, sticky="nsew")
+        # Generating Speed
+        self.__lbl_gen_spd = tk.Label(self.__groupbox_animations, text="Generating Speed:")
+        self.__lbl_gen_spd.grid(row=0, column=0, sticky="w")
+        self.__sb_gen_spd = tk.Spinbox(self.__groupbox_animations, justify="right", from_=1, to=20, increment=1, textvariable=self.__default_gen_spd, width=10, command=self.on_value_change)
+        self.__sb_gen_spd.grid(row=0, column=1)
+        # Solving Speed
+        self.__lbl_solve_spd = tk.Label(self.__groupbox_animations, text="Solving Speed:")
+        self.__lbl_solve_spd.grid(row=1, column=0, sticky="w")
+        self.__sb_solve_spd = tk.Spinbox(self.__groupbox_animations, justify="right", from_=1, to=20, increment=1, textvariable=self.__default_solve_spd, width=10, command=self.on_value_change)
+        self.__sb_solve_spd.grid(row=1, column=1)
+
+        # Reset Button
+        self.__btn_reset = tk.Button(self.__frame, text="Reset", command=self.__maze.reset)
+        self.__btn_reset.grid(row=5, column=0, padx=15, sticky="ew")
+
+        # Exit Button
+        self.__btn_exit = tk.Button(self.__frame, text="Exit") # Add exit function
+        self.__btn_exit.grid(row=6, column=0, padx=15, sticky="ew")
+
+    def on_value_change(self):
+        self.__maze.set_num_rows(int(self.__sb_num_rows.get()))
+        self.__maze.set_num_cols(int(self.__sb_num_cols.get()))
+        self.__maze.set_generating_speed(1/(1+int(self.__sb_gen_spd.get())*5))
+        self.__maze.set_solving_speed(1/(1+int(self.__sb_solve_spd.get())*5))

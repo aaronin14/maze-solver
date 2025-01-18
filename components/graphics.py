@@ -10,7 +10,6 @@ class MazeGraphic:
         self.__running = False
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
 
-
     def redraw(self):
         self.__frame.update_idletasks()
         self.__frame.update()
@@ -25,6 +24,10 @@ class MazeGraphic:
         self.__running = True
         while self.__running:
             self.redraw()
+
+    def clear_canvas(self):
+        self.__canvas.delete("all")
+        self.redraw()
 
     def close(self):
         self.__running = False

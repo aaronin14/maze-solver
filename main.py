@@ -1,18 +1,16 @@
 import tkinter as tk
-from components.ui import Settings
+from components.ui import UserInterface
 from components.graphics import MazeGraphic
 from components.maze import Maze
 
 
 def main():
-    # Maze Configuration
-    maze_w = 600
-    maze_h = 600
-    margin = 30
-    num_rows = 20
-    num_cols = 20
-    cell_size_x = (maze_w - margin * 2) / num_cols
-    cell_size_y = (maze_h - margin * 2) / num_rows
+    # Default Maze Configuration
+    maze_w = 800
+    maze_h = 800
+    margin = 25
+    num_rows = 15
+    num_cols = 15
 
     root = tk.Tk()
     root.title("Maze Solver")
@@ -22,8 +20,8 @@ def main():
     right_frame.grid(row=0, column=1)
 
     maze_graphic = MazeGraphic(root, left_frame, maze_w, maze_h)
-    maze = Maze(margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, maze_graphic)
-    settings = Settings(right_frame, maze)
+    maze = Maze(maze_w, maze_h, margin, num_rows, num_cols, maze_graphic)
+    ui = UserInterface(right_frame, maze)
     maze_graphic.wait_for_close()
 
 
