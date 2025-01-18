@@ -23,10 +23,9 @@ class Maze:
         self._cell_width = (width - margin * 2) / num_cols
         self._cell_height = (height - margin * 2) / num_rows
         self._maze_graphic = maze_graphic
-        self._generating_speed = 1/(1+50)
-        self._solving_speed = 1/(1+50)
-        self._generated=False
-        self._solved=False
+        self._speed = 1/(51)
+        self._generated = False
+        self._solved = False
         if seed:
             random.seed(seed)
 
@@ -50,17 +49,15 @@ class Maze:
         self._num_cols = num_cols
         self._cell_width = (self._height - self._margin * 2) / num_cols
 
-    def set_generating_speed(self, generating_speed):
-        self._generating_speed = generating_speed
-
-    def set_solving_speed(self, solving_speed):
-        self._solving_speed = solving_speed
+    def set_speed(self, speed):
+        self._speed = speed
 
     def solve(self, algorithm="DFS"):
-        if not self._solved:
-            self._solved = True
-            if algorithm == "DFS":
-                return self._dfs_r(0, 0)
+        if self._generated:
+            if not self._solved:
+                self._solved = True
+                if algorithm == "DFS":
+                    return self._dfs_r(0, 0)
 
     def reset(self):
         self._generated = False
@@ -93,7 +90,7 @@ class Maze:
         x2 = x1 + self._cell_width
         y2 = y1 + self._cell_height
         self._cells[i][j].draw(x1, y1, x2, y2)
-        self._animate(self._generating_speed)
+        self._animate(self._speed)
 
     def _animate(self, speed):
         if self._maze_graphic is None:
@@ -163,7 +160,7 @@ class Maze:
 
     # Depth-first Search
     def _dfs_r(self, i, j):
-        self._animate(self._solving_speed)
+        self._animate(self._speed)
 
         # Visit the current cell
         self._cells[i][j].visited = True

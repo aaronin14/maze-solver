@@ -1,13 +1,13 @@
 import tkinter as tk
 
 class UserInterface:
-    def __init__(self, frame, maze):
+    def __init__(self, root, frame, maze, maze_graphic):
+        self.__maze_graphic = maze_graphic
+        self.__root = root
         self.__frame = frame
         self.__maze = maze
         self.__default_num_rows = tk.StringVar(value="15")
         self.__default_num_cols = tk.StringVar(value="15")
-        self.__default_gen_spd = tk.StringVar(value="10")
-        self.__default_solve_spd = tk.StringVar(value="10")
         self.__algorithm_option = tk.StringVar(value="DFS")
 
         # Maze Settings
@@ -17,12 +17,12 @@ class UserInterface:
         # Num Rows
         self.__lbl_num_rows = tk.Label(self.__groupbox_maze_settings, text="Num Rows (5-30):")
         self.__lbl_num_rows.grid(row=0, column=0, sticky="w")
-        self.__sb_num_rows = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_rows, increment=1, width=10, command=self.on_value_change)
+        self.__sb_num_rows = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_rows, increment=1, width=10, command=self.on_spinbox_value_change)
         self.__sb_num_rows.grid(row=0, column=1)
         # Num Cols
         self.__lbl_num_cols = tk.Label(self.__groupbox_maze_settings, text="Num Cols (5-30):")
         self.__lbl_num_cols.grid(row=1, column=0, sticky="w")
-        self.__sb_num_cols = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_cols, increment=1, width=10, command=self.on_value_change)
+        self.__sb_num_cols = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_cols, increment=1, width=10, command=self.on_spinbox_value_change)
         self.__sb_num_cols.grid(row=1, column=1)
 
         # Generate Button
@@ -47,27 +47,33 @@ class UserInterface:
         # Animation Options
         self.__groupbox_animations = tk.LabelFrame(self.__frame, text="Animation Options", padx=5, pady=5)
         self.__groupbox_animations.grid(row=4, column=0, padx=15, pady=10, sticky="nsew")
-        # Generating Speed
-        self.__lbl_gen_spd = tk.Label(self.__groupbox_animations, text="Generating Speed:")
-        self.__lbl_gen_spd.grid(row=0, column=0, sticky="w")
-        self.__sb_gen_spd = tk.Spinbox(self.__groupbox_animations, justify="right", from_=1, to=20, increment=1, textvariable=self.__default_gen_spd, width=10, command=self.on_value_change)
-        self.__sb_gen_spd.grid(row=0, column=1)
-        # Solving Speed
-        self.__lbl_solve_spd = tk.Label(self.__groupbox_animations, text="Solving Speed:")
-        self.__lbl_solve_spd.grid(row=1, column=0, sticky="w")
-        self.__sb_solve_spd = tk.Spinbox(self.__groupbox_animations, justify="right", from_=1, to=20, increment=1, textvariable=self.__default_solve_spd, width=10, command=self.on_value_change)
-        self.__sb_solve_spd.grid(row=1, column=1)
+        self.__scale_spd = tk.Scale(self.__groupbox_animations, from_=0, to=20, orient="horizontal", length=250, command=self.on_scale_value_change)
+        self.__scale_spd.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.__scale_spd.set(10)
 
         # Reset Button
-        self.__btn_reset = tk.Button(self.__frame, text="Reset", command=self.__maze.reset)
+        self.__btn_reset = tk.Button(self.__frame, text="Reset", command=self.reset)
         self.__btn_reset.grid(row=5, column=0, padx=15, sticky="ew")
 
         # Exit Button
-        self.__btn_exit = tk.Button(self.__frame, text="Exit") # Add exit function
+        self.__btn_exit = tk.Button(self.__frame, text="Exit", command=self.exit) # Add exit function
         self.__btn_exit.grid(row=6, column=0, padx=15, sticky="ew")
 
-    def on_value_change(self):
+    def on_spinbox_value_change(self):
         self.__maze.set_num_rows(int(self.__sb_num_rows.get()))
         self.__maze.set_num_cols(int(self.__sb_num_cols.get()))
-        self.__maze.set_generating_speed(1/(1+int(self.__sb_gen_spd.get())*5))
-        self.__maze.set_solving_speed(1/(1+int(self.__sb_solve_spd.get())*5))
+
+    def on_scale_value_change(self, value):
+        self.__maze.set_speed(1/(1+int(value)*5))
+
+    def reset(self):
+        self.__default_num_cols.set("15")
+        self.__default_num_rows.set("15")
+        self.__algorithm_option.set("DFS")
+        self.__scale_spd.set(10)
+        self.__maze.reset()
+
+    def exit(self):
+        self.__maze_graphic.close()
+        self.__root.destroy()
+

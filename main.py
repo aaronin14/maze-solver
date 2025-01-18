@@ -21,7 +21,7 @@ def main():
 
     maze_graphic = MazeGraphic(root, left_frame, maze_w, maze_h)
     maze = Maze(maze_w, maze_h, margin, num_rows, num_cols, maze_graphic)
-    ui = UserInterface(right_frame, maze)
+    ui = UserInterface(root, right_frame, maze, maze_graphic)
     maze_graphic.wait_for_close()
 
 
