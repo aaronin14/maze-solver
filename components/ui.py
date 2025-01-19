@@ -41,7 +41,7 @@ class UserInterface:
         self.__rb3.grid(row=3, column=0, sticky="w")
 
         # Solve Button
-        self.__btn_solve = tk.Button(self.__frame, text="Solve", command=self.__maze.solve)
+        self.__btn_solve = tk.Button(self.__frame, text="Solve", command=self.solve)
         self.__btn_solve.grid(row=3, column=0, padx=15, sticky="ew")
 
         # Animation Options
@@ -65,6 +65,10 @@ class UserInterface:
 
     def on_scale_value_change(self, value):
         self.__maze.set_speed(1/(1+int(value)*5))
+
+    def solve(self):
+        selected_algorithm = self.__algorithm_option.get()
+        self.__maze.solve(selected_algorithm)
 
     def reset(self):
         self.__default_num_cols.set("15")

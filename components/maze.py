@@ -15,6 +15,7 @@ class Maze:
             seed=None,
     ):
         self._cells = []
+        self._to_visit = []
         self._width = width
         self._height = height
         self._margin = margin
@@ -38,8 +39,8 @@ class Maze:
             break_wall_y = random.randrange(0,self._num_rows)
             self._break_walls_r(break_wall_x, break_wall_y)
             # Reset visited property to reuse
-            self._reset_cells_visited()
             self._generated = True
+            self._reset_cells_visited()
 
     def set_num_rows(self, num_rows):
         self._num_rows = num_rows
@@ -53,11 +54,16 @@ class Maze:
         self._speed = speed
 
     def solve(self, algorithm="DFS"):
-        if self._generated:
-            if not self._solved:
-                self._solved = True
-                if algorithm == "DFS":
-                    return self._dfs_r(0, 0)
+        if not self._solved:
+            self._solved = True
+            if algorithm == "BFS":
+                print("Running BFS Algorithm")
+                return self._bfs_r(0,0)
+            elif algorithm == "A*":
+                return
+            else:
+                print("Running DFS Algorithm")
+                return self._dfs_r(0, 0)
 
     def reset(self):
         self._generated = False
@@ -161,14 +167,11 @@ class Maze:
     # Depth-first Search
     def _dfs_r(self, i, j):
         self._animate(self._speed)
-
         # Visit the current cell
         self._cells[i][j].visited = True
-
-        # if the current cell is the end cell
+        # Check if the current cell is the end cell
         if i == self._num_cols-1 and j == self._num_rows-1:
             return True
-
         # Check directions
         # left
         if (
@@ -216,4 +219,56 @@ class Maze:
 
         # Wrong direction
         return False
+
+
+    def _bfs_r(self, i, j):
+        self._animate(self._speed)
+        # Visit the current cell
+        self._cells[i][j].visited = True
+        # Check if the current cell is the end cell
+        if i == self._num_cols-1 and j == self._num_rows-1:
+            return True
+        # Check directions
+        # left
+        if (
+            i > 0
+            and not self._cells[i][j].has_left_wall
+            and not self._cells[i-1][j].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i-1][j])
+            self._to_visit.append((i-1,j))
+        # right
+        if (
+            i < self._num_cols-1
+            and not self._cells[i][j].has_right_wall
+            and not self._cells[i+1][j].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i+1][j])
+            self._to_visit.append((i+1,j))
+        # top
+        if (
+            j > 0
+            and not self._cells[i][j].has_top_wall
+            and not self._cells[i][j-1].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i][j-1])
+            self._to_visit.append((i,j-1))
+        # bottom
+        if (
+            j < self._num_rows-1
+            and not self._cells[i][j].has_bottom_wall
+            and not self._cells[i][j+1].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i][j+1])
+            self._to_visit.append((i,j+1))
+
+        next_cell = self._to_visit.pop(0)
+        next_i = next_cell[0]
+        next_j = next_cell[1]
+        self._bfs_r(next_i, next_j)
+        #self._cells[i][j].draw_move(self._cells[next_i][next_j], True)
+
+        # Wrong direction
+        if not self._to_visit:
+            return False
 
