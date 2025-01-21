@@ -9,8 +9,8 @@ def main():
     maze_w = 800
     maze_h = 800
     margin = 25
-    num_rows = 15
-    num_cols = 15
+    rows = 15
+    cols = 15
 
     root = tk.Tk()
     root.title("Maze Solver")
@@ -20,7 +20,7 @@ def main():
     right_frame.grid(row=0, column=1)
 
     maze_graphic = MazeGraphic(root, left_frame, maze_w, maze_h)
-    maze = Maze(maze_w, maze_h, margin, num_rows, num_cols, maze_graphic)
+    maze = Maze(maze_w, maze_h, margin, rows, cols, maze_graphic)
     ui = UserInterface(root, right_frame, maze, maze_graphic)
     maze_graphic.wait_for_close()
 

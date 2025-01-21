@@ -52,7 +52,7 @@ class Cell:
     def drawable(self):
         return not (self._x1 is None or self._x2 is None or self._y1 is None or self._y2 is None)
 
-    def draw_move(self, to_cell, undo=False):
+    def draw_move(self, to_cell, fill_color="yellow"):
         if not self.drawable() or not to_cell.drawable():
             return
 
@@ -61,9 +61,6 @@ class Cell:
         p2 = Point((to_cell._x1+to_cell._x2)/2, (to_cell._y1+to_cell._y2)/2)
 
         # Draw Line
-        fill_color = "yellow"
-        if undo:
-            fill_color = "#3a3b3c"
         line = Line(p1, p2)
         self._maze_graphic.draw_line(line, fill_color)
 

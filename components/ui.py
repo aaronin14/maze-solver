@@ -6,8 +6,8 @@ class UserInterface:
         self.__root = root
         self.__frame = frame
         self.__maze = maze
-        self.__default_num_rows = tk.StringVar(value="15")
-        self.__default_num_cols = tk.StringVar(value="15")
+        self.__default_rows = tk.StringVar(value="15")
+        self.__default_cols = tk.StringVar(value="15")
         self.__algorithm_option = tk.StringVar(value="DFS")
 
         # Maze Settings
@@ -15,15 +15,15 @@ class UserInterface:
         self.__groupbox_maze_settings.grid(row=0, column=0, padx=15, pady=10, sticky="ew")
         self.__groupbox_maze_settings.columnconfigure(0, weight=1)
         # Num Rows
-        self.__lbl_num_rows = tk.Label(self.__groupbox_maze_settings, text="Num Rows (5-30):")
-        self.__lbl_num_rows.grid(row=0, column=0, sticky="w")
-        self.__sb_num_rows = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_rows, increment=1, width=10, command=self.on_spinbox_value_change)
-        self.__sb_num_rows.grid(row=0, column=1)
+        self.__lbl_rows = tk.Label(self.__groupbox_maze_settings, text="Num Rows (5-30):")
+        self.__lbl_rows.grid(row=0, column=0, sticky="w")
+        self.__sb_rows = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_rows, increment=1, width=10, command=self.on_spinbox_value_change)
+        self.__sb_rows.grid(row=0, column=1)
         # Num Cols
-        self.__lbl_num_cols = tk.Label(self.__groupbox_maze_settings, text="Num Cols (5-30):")
-        self.__lbl_num_cols.grid(row=1, column=0, sticky="w")
-        self.__sb_num_cols = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_num_cols, increment=1, width=10, command=self.on_spinbox_value_change)
-        self.__sb_num_cols.grid(row=1, column=1)
+        self.__lbl_cols = tk.Label(self.__groupbox_maze_settings, text="Num Cols (5-30):")
+        self.__lbl_cols.grid(row=1, column=0, sticky="w")
+        self.__sb_cols = tk.Spinbox(self.__groupbox_maze_settings, justify="right", from_=5, to=30, textvariable=self.__default_cols, increment=1, width=10, command=self.on_spinbox_value_change)
+        self.__sb_cols.grid(row=1, column=1)
 
         # Generate Button
         self.__btn_generate = tk.Button(self.__frame, text="Generate", command=self.__maze.generate_maze)
@@ -60,8 +60,8 @@ class UserInterface:
         self.__btn_exit.grid(row=6, column=0, padx=15, sticky="ew")
 
     def on_spinbox_value_change(self):
-        self.__maze.set_num_rows(int(self.__sb_num_rows.get()))
-        self.__maze.set_num_cols(int(self.__sb_num_cols.get()))
+        self.__maze.set_rows(int(self.__sb_rows.get()))
+        self.__maze.set_cols(int(self.__sb_cols.get()))
 
     def on_scale_value_change(self, value):
         self.__maze.set_speed(1/(1+int(value)*5))
@@ -71,8 +71,8 @@ class UserInterface:
         self.__maze.solve(selected_algorithm)
 
     def reset(self):
-        self.__default_num_cols.set("15")
-        self.__default_num_rows.set("15")
+        self.__default_cols.set("15")
+        self.__default_rows.set("15")
         self.__algorithm_option.set("DFS")
         self.__scale_spd.set(10)
         self.__maze.reset()
