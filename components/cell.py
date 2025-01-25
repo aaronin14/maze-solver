@@ -52,7 +52,7 @@ class Cell:
     def drawable(self):
         return not (self._x1 is None or self._x2 is None or self._y1 is None or self._y2 is None)
 
-    def draw_move(self, to_cell, fill_color="yellow"):
+    def draw_move(self, to_cell, fill_color="#5e1914"):
         if not self.drawable() or not to_cell.drawable():
             return
 

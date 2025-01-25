@@ -54,5 +54,5 @@ class Rectangle:
         self.y1 = y1
         self.y2 = y2
 
-    def fill(self, canvas, fill_color="red"):
+    def fill(self, canvas, fill_color="ff2400"):
         canvas.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill=fill_color, width=0)

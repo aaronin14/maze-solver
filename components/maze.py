@@ -1,15 +1,16 @@
-from queue import PriorityQueue
+import math
 import random
 import time
+from queue import PriorityQueue
 from components.cell import Cell
 
 
 class Maze:
     def __init__(
             self,
-            width=800,
-            height=800,
-            margin=25,
+            width=720,
+            height=720,
+            margin=20,
             rows=15,
             cols=15,
             maze_graphic=None,
@@ -25,7 +26,7 @@ class Maze:
         self._cell_width = (width - margin * 2) / cols
         self._cell_height = (height - margin * 2) / rows
         self._maze_graphic = maze_graphic
-        self._speed = 1/(51)
+        self._speed = 1/(1+math.log(7)*40)
         self._generated = False
         self._solved = False
         if seed:
@@ -51,8 +52,9 @@ class Maze:
         self._cols = cols
         self._cell_width = (self._height - self._margin * 2) / cols
 
-    def set_speed(self, speed):
-        self._speed = speed
+    def set_speed(self, x):
+        self._speed = 1/(1 + math.log(x+2) * 40)
+        #self._speed = 0.001
 
     def solve(self, algorithm="DFS"):
         if not self._solved:
@@ -64,21 +66,15 @@ class Maze:
             else:
                 return self._dfs_r(0, 0)
 
-    def clear(self):
+    def reset(self):
         self._generated = False
         self._solved = False
         self._maze_graphic.clear_canvas()
         self._cells = []
+        self._path = {}
         self._margin = 25
-        self._rows = 15
-        self._cols = 15
         self._cell_width = (self._width - self._margin * 2) / self._cols
         self._cell_height = (self._height - self._margin * 2) / self._rows
-
-    def reset(self):
-        self._solved = False
-        self._cells = []
-        # TODO: remove draw_move() only
 
     def _create_cells(self):
         # Create cells matrix
@@ -183,10 +179,10 @@ class Maze:
             and not self._cells[i][j].has_left_wall
             and not self._cells[i-1][j].visited
         ):
-            self._cells[i][j].draw_move(self._cells[i-1][j])
+            self._cells[i][j].draw_move(self._cells[i-1][j], "#fff200")
             if self._dfs_r(i-1, j):
                 return True
-            self._cells[i][j].draw_move(self._cells[i-1][j], "green")
+            self._cells[i][j].draw_move(self._cells[i-1][j])
 
         # right
         if (
@@ -194,10 +190,10 @@ class Maze:
             and not self._cells[i][j].has_right_wall
             and not self._cells[i+1][j].visited
         ):
-            self._cells[i][j].draw_move(self._cells[i+1][j])
+            self._cells[i][j].draw_move(self._cells[i+1][j], "#fff200")
             if self._dfs_r(i+1, j):
                 return True
-            self._cells[i][j].draw_move(self._cells[i+1][j], "green")
+            self._cells[i][j].draw_move(self._cells[i+1][j])
 
         # top
         if (
@@ -205,10 +201,10 @@ class Maze:
             and not self._cells[i][j].has_top_wall
             and not self._cells[i][j-1].visited
         ):
-            self._cells[i][j].draw_move(self._cells[i][j-1])
+            self._cells[i][j].draw_move(self._cells[i][j-1], "#fff200")
             if self._dfs_r(i, j-1):
                 return True
-            self._cells[i][j].draw_move(self._cells[i][j-1], "green")
+            self._cells[i][j].draw_move(self._cells[i][j-1])
 
         # bottom
         if (
@@ -216,10 +212,10 @@ class Maze:
             and not self._cells[i][j].has_bottom_wall
             and not self._cells[i][j+1].visited
         ):
-            self._cells[i][j].draw_move(self._cells[i][j+1])
+            self._cells[i][j].draw_move(self._cells[i][j+1], "#fff200")
             if self._dfs_r(i, j+1):
                 return True
-            self._cells[i][j].draw_move(self._cells[i][j+1], "green")
+            self._cells[i][j].draw_move(self._cells[i][j+1])
 
         # Wrong direction
         return False
@@ -235,6 +231,7 @@ class Maze:
         self._cells[i][j].visited = True
         # Check if the current cell is the end cell
         if i == self._cols-1 and j == self._rows-1:
+            self._back_track()
             return True
         # Check for next available cell
         # left
@@ -244,6 +241,7 @@ class Maze:
             and not self._cells[i-1][j].visited
         ):
             self._cells[i][j].draw_move(self._cells[i-1][j])
+            self._path[(i-1,j)] = (i,j)
             to_visit.append((i-1,j))
         # right
         if (
@@ -252,6 +250,7 @@ class Maze:
             and not self._cells[i+1][j].visited
         ):
             self._cells[i][j].draw_move(self._cells[i+1][j])
+            self._path[(i+1,j)] = (i,j)
             to_visit.append((i+1,j))
         # top
         if (
@@ -260,6 +259,7 @@ class Maze:
             and not self._cells[i][j-1].visited
         ):
             self._cells[i][j].draw_move(self._cells[i][j-1])
+            self._path[(i,j-1)] = (i,j)
             to_visit.append((i,j-1))
         # bottom
         if (
@@ -268,6 +268,7 @@ class Maze:
             and not self._cells[i][j+1].visited
         ):
             self._cells[i][j].draw_move(self._cells[i][j+1])
+            self._path[(i,j+1)] = (i,j)
             to_visit.append((i,j+1))
 
         next_cell = to_visit.pop(0)
@@ -361,9 +362,9 @@ class Maze:
     def _back_track(self):
         x1 = self._cols-1
         y1 = self._rows-1
-        while self._path[(x1, y1)] is not None:
+        while self._path[(x1, y1)]:
             self._animate(self._speed)
             x2 , y2 = self._path[(x1, y1)]
-            self._cells[x1][y1].draw_move(self._cells[x2][y2], "green")
+            self._cells[x1][y1].draw_move(self._cells[x2][y2], "#fff200")
             x1 = x2
             y1 = y2

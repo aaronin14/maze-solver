@@ -6,8 +6,8 @@ from components.maze import Maze
 
 def main():
     # Default Maze Configuration
-    maze_w = 800
-    maze_h = 800
+    maze_w = 720
+    maze_h = 720
     margin = 25
     rows = 15
     cols = 15
@@ -17,7 +17,7 @@ def main():
     left_frame = tk.Frame(root)
     left_frame.grid(row=0, column=0)
     right_frame = tk.Frame(root)
-    right_frame.grid(row=0, column=1)
+    right_frame.grid(row=0, column=1, sticky="ew")
 
     maze_graphic = MazeGraphic(root, left_frame, maze_w, maze_h)
     maze = Maze(maze_w, maze_h, margin, rows, cols, maze_graphic)

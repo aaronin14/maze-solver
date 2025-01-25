@@ -44,27 +44,27 @@ class UserInterface:
         self.__btn_solve = tk.Button(self.__frame, text="Solve", command=self.solve)
         self.__btn_solve.grid(row=3, column=0, padx=15, sticky="ew")
 
-        # Animation Options
-        self.__groupbox_animations = tk.LabelFrame(self.__frame, text="Animation Options", padx=5, pady=5)
+        # Animation Speed
+        self.__groupbox_animations = tk.LabelFrame(self.__frame, text="Animation Speed", padx=5, pady=5)
         self.__groupbox_animations.grid(row=4, column=0, padx=15, pady=10, sticky="nsew")
-        self.__scale_spd = tk.Scale(self.__groupbox_animations, from_=0, to=20, orient="horizontal", length=250, command=self.on_scale_value_change)
+        self.__scale_spd = tk.Scale(self.__groupbox_animations, from_=0, to=10, orient="horizontal", length=250, command=self.on_scale_value_change)
         self.__scale_spd.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
         self.__scale_spd.set(10)
 
         # Reset Button
         self.__btn_reset = tk.Button(self.__frame, text="Reset", command=self.reset)
-        self.__btn_reset.grid(row=5, column=0, padx=15, sticky="ew")
+        self.__btn_reset.grid(row=6, column=0, padx=15, sticky="ew")
 
         # Exit Button
         self.__btn_exit = tk.Button(self.__frame, text="Exit", command=self.exit) # Add exit function
-        self.__btn_exit.grid(row=6, column=0, padx=15, sticky="ew")
+        self.__btn_exit.grid(row=7, column=0, padx=15, sticky="ew")
 
     def on_spinbox_value_change(self):
         self.__maze.set_rows(int(self.__sb_rows.get()))
         self.__maze.set_cols(int(self.__sb_cols.get()))
 
     def on_scale_value_change(self, value):
-        self.__maze.set_speed(1/(1+int(value)*5))
+        self.__maze.set_speed(int(value))
 
     def solve(self):
         selected_algorithm = self.__algorithm_option.get()
@@ -75,6 +75,8 @@ class UserInterface:
         self.__default_rows.set("15")
         self.__algorithm_option.set("DFS")
         self.__scale_spd.set(10)
+        self.on_scale_value_change(10)
+        self.on_spinbox_value_change()
         self.__maze.reset()
 
     def exit(self):
