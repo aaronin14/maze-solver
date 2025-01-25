@@ -4,18 +4,18 @@ Using Python and Tkinter to build a Graphical User Interface that generates and 
 
 ## Demo
 
-Full Demo
-
-![Full Demo](demo/Full%20demo.gif)
-
-Depth First Search Demo
+### Depth-First Search (DFS)
 
 ![DFS Demo](demo/DFS%20demo.gif)
 
-Breadth First Search Demo
+### Breadth-First Search (BFS)
 
 ![BFS Demo](demo/BFS%20demo.gif)
 
-Best First A* Search Demo
+### Best-First A* Search 
 
 ![Astar Demo](demo/Astar%20demo.gif)
+
+### Full Demo
+
+![Full Demo](demo/Full%20demo.gif)
